@@ -122,6 +122,10 @@ Michael Shoemate, Privacy Architect for the OpenDP Library
 <ul>
 <li>What is Differential Privacy?</li>
 </ul></li>
+<li>DP Wizard
+<ul>
+<li>Live demo</li>
+</ul></li>
 <li>OpenDP Library
 <ul>
 <li>Context API</li>
@@ -211,6 +215,11 @@ one person in the data.</p>
 <p>The “privacy loss” of sharing the outcome of this algorithm depends
 on how many records an individual can contribute to the data, and how
 much noise is added.</p>
+</div>
+<div id="dp-wizard" class="slide section level2">
+<h1>DP Wizard</h1>
+<p><a href="https://mccalluc-dp-wizard.share.connect.posit.cloud/">LIVE
+DEMO</a></p>
 </div>
 <div id="opendp-library-setup" class="slide section level2">
 <h1>OpenDP Library Setup</h1>
@@ -307,9 +316,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a hr
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>...    privacy_unit<span class="op">=</span>dp.unit_of(contributions<span class="op">=</span><span class="dv">36</span>),</span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>...    privacy_loss<span class="op">=</span>dp.loss_of(epsilon<span class="op">=</span><span class="fl">1.0</span>),</span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>... )</span></code></pre></div>
-<ul>
-<li>APIs similar to existing data science libraries</li>
-</ul>
+<p>From here on, aim to create APIs similar to existing data science
+libraries…</p>
 </div>
 <div id="dp-count" class="slide section level2">
 <h1>DP Count</h1>
@@ -552,11 +560,6 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a h
 <li>Utility: Joins against the explicit key set, imputes missing
 keys</li>
 </ul></li>
-<li>Invariant Keys
-<ul>
-<li>Privacy: Weakens the integrity of the privacy guarantee</li>
-<li>Utility: Releases all keys in the clear</li>
-</ul></li>
 </ul>
 </div>
 <div id="dp-grouping-with-stable-keys" class="slide section level2">
@@ -566,61 +569,55 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a h
 <span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>...     data<span class="op">=</span>lfs_data,</span>
 <span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>...     privacy_unit<span class="op">=</span>dp.unit_of(contributions<span class="op">=</span><span class="dv">36</span>),</span>
 <span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>...     privacy_loss<span class="op">=</span>dp.loss_of(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>, delta<span class="op">=</span><span class="fl">1e-7</span>),</span>
-<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>... )</span>
-<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat <span class="op">=</span> (</span>
-<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>, delta<span class="op">=</span><span class="fl">1e-7</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>...     .group_by(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;ILOSTAT&quot;</span>)</span>
-<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>...     .agg(dp.<span class="bu">len</span>())</span>
-<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>... )</span>
-<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a></span>
-<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat.summarize()</span>
-<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a>shape: (<span class="dv">1</span>, <span class="dv">5</span>)</span>
-<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a>┌────────┬──────────────┬─────────────────┬───────┬───────────┐</span>
-<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a>│ column ┆ aggregate    ┆ distribution    ┆ scale ┆ threshold │</span>
-<span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a>│ <span class="op">---</span>    ┆ <span class="op">---</span>          ┆ <span class="op">---</span>             ┆ <span class="op">---</span>   ┆ <span class="op">---</span>       │</span>
-<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a>│ <span class="bu">str</span>    ┆ <span class="bu">str</span>          ┆ <span class="bu">str</span>             ┆ f64   ┆ u32       │</span>
-<span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a>╞════════╪══════════════╪═════════════════╪═══════╪═══════════╡</span>
-<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a>│ <span class="bu">len</span>    ┆ Frame Length ┆ Integer Laplace ┆ <span class="fl">180.0</span> ┆ <span class="dv">3458</span>      │</span>
-<span id="cb21-21"><a href="#cb21-21" tabindex="-1"></a>└────────┴──────────────┴─────────────────┴───────┴───────────┘</span>
-<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a></span>
-<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> df <span class="op">=</span> query_age_ilostat.release().collect()</span></code></pre></div>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>...     margins<span class="op">=</span>[dp.polars.Margin(max_length<span class="op">=</span><span class="dv">150_000</span> <span class="op">*</span> <span class="dv">36</span>)],</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>... )</span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat <span class="op">=</span> (</span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>, delta<span class="op">=</span><span class="fl">1e-7</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>...     .group_by(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;ILOSTAT&quot;</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>...     .agg(dp.<span class="bu">len</span>())</span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>... )</span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat.summarize()</span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a>shape: (<span class="dv">1</span>, <span class="dv">5</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a>┌────────┬──────────────┬─────────────────┬───────┬───────────┐</span>
+<span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a>│ column ┆ aggregate    ┆ distribution    ┆ scale ┆ threshold │</span>
+<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a>│ <span class="op">---</span>    ┆ <span class="op">---</span>          ┆ <span class="op">---</span>             ┆ <span class="op">---</span>   ┆ <span class="op">---</span>       │</span>
+<span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a>│ <span class="bu">str</span>    ┆ <span class="bu">str</span>          ┆ <span class="bu">str</span>             ┆ f64   ┆ u32       │</span>
+<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a>╞════════╪══════════════╪═════════════════╪═══════╪═══════════╡</span>
+<span id="cb21-21"><a href="#cb21-21" tabindex="-1"></a>│ <span class="bu">len</span>    ┆ Frame Length ┆ Integer Laplace ┆ <span class="fl">180.0</span> ┆ <span class="dv">3458</span>      │</span>
+<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a>└────────┴──────────────┴─────────────────┴───────┴───────────┘</span>
+<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a></span>
+<span id="cb21-24"><a href="#cb21-24" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> df <span class="op">=</span> query_age_ilostat.release().collect()</span></code></pre></div>
 <p><img src="images/stable_keys.png" alt="Stable Keys" width="800"/></p>
 </div>
 <div id="dp-grouping-with-explicit-keys" class="slide section level2">
 <h1>DP Grouping with Explicit Keys</h1>
 <p>Reusing the key-set released in the previous query:</p>
 <div class="sourceCode" id="cb22"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> context <span class="op">=</span> dp.Context.compositor(</span>
-<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>...     data<span class="op">=</span>lfs_data,</span>
-<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>...     privacy_unit<span class="op">=</span>dp.unit_of(contributions<span class="op">=</span><span class="dv">36</span>),</span>
-<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>...     privacy_loss<span class="op">=</span>dp.loss_of(epsilon<span class="op">=</span><span class="fl">1.0</span> <span class="op">/</span> <span class="dv">5</span>),</span>
-<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>...     margins<span class="op">=</span>[dp.polars.Margin(max_length<span class="op">=</span><span class="dv">150_000</span> <span class="op">*</span> <span class="dv">36</span>)],</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat <span class="op">=</span> (</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>, delta<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>...     .group_by(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;ILOSTAT&quot;</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>...     .agg(pl.col.HWUSUAL.dp.<span class="bu">sum</span>((<span class="dv">0</span>, <span class="dv">80</span>)))</span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>...     .with_keys(df[<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;ILOSTAT&quot;</span>])</span>
 <span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>... )</span>
 <span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a></span>
-<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat <span class="op">=</span> (</span>
-<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>)</span>
-<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>...     .group_by(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;ILOSTAT&quot;</span>)</span>
-<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a>...     .agg(pl.col.HWUSUAL.dp.<span class="bu">sum</span>((<span class="dv">0</span>, <span class="dv">80</span>)))</span>
-<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>...     .with_keys(df[<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;ILOSTAT&quot;</span>])</span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>... )</span>
-<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a></span>
-<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat.summarize()</span>
-<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a>shape: (<span class="dv">1</span>, <span class="dv">4</span>)</span>
-<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a>┌─────────┬───────────┬───────────────┬──────────────┐</span>
-<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a>│ column  ┆ aggregate ┆ distribution  ┆ scale        │</span>
-<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a>│ <span class="op">---</span>     ┆ <span class="op">---</span>       ┆ <span class="op">---</span>           ┆ <span class="op">---</span>          │</span>
-<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a>│ <span class="bu">str</span>     ┆ <span class="bu">str</span>       ┆ <span class="bu">str</span>           ┆ f64          │</span>
-<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a>╞═════════╪═══════════╪═══════════════╪══════════════╡</span>
-<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a>│ HWUSUAL ┆ Sum       ┆ Float Laplace ┆ <span class="fl">14472.517992</span> │</span>
-<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a>└─────────┴───────────┴───────────────┴──────────────┘</span></code></pre></div>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_age_ilostat.summarize()</span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a>shape: (<span class="dv">1</span>, <span class="dv">4</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>┌─────────┬───────────┬───────────────┬──────────────┐</span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a>│ column  ┆ aggregate ┆ distribution  ┆ scale        │</span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>│ <span class="op">---</span>     ┆ <span class="op">---</span>       ┆ <span class="op">---</span>           ┆ <span class="op">---</span>          │</span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>│ <span class="bu">str</span>     ┆ <span class="bu">str</span>       ┆ <span class="bu">str</span>           ┆ f64          │</span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>╞═════════╪═══════════╪═══════════════╪══════════════╡</span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a>│ HWUSUAL ┆ Sum       ┆ Float Laplace ┆ <span class="fl">14472.517992</span> │</span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a>└─────────┴───────────┴───────────────┴──────────────┘</span></code></pre></div>
 </div>
 <div id="pre-processing" class="slide section level2">
 <h1>Pre-Processing</h1>
 <p>Stable transformations in <code>with_columns</code>:</p>
 <div class="sourceCode" id="cb23"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_hwusual_binned <span class="op">=</span> (</span>
-<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>, delta<span class="op">=</span><span class="fl">0.0</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>...     <span class="co"># shadows the usual work hours &quot;HWUSUAL&quot; column with binned data</span></span>
 <span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>...     .with_columns(pl.col.HWUSUAL.cut(breaks<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">80</span>, <span class="dv">98</span>]))</span>
 <span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>...     .group_by(pl.col.HWUSUAL)</span>
@@ -632,7 +629,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a h
 <p>Stable transformations in <code>group_by</code>:</p>
 <div class="sourceCode" id="cb24"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> query_hwusual_binned <span class="op">=</span> (</span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>...     context.query(epsilon<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">5</span>, delta<span class="op">=</span><span class="fl">0.0</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>...     .group_by(pl.col.HWUSUAL.cut(breaks<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">80</span>, <span class="dv">98</span>]))</span>
 <span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>...     .agg(dp.<span class="bu">len</span>())</span>
 <span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>... )</span></code></pre></div>
@@ -896,9 +893,8 @@ href="https://docs.opendp.org/en/v0.13.0/proofs/rust/src/measurements/randomized
 document</a></li>
 </ul>
 </div>
-<div id="extensibility-programming-framework"
-class="slide section level2">
-<h1>Extensibility: Programming Framework</h1>
+<div id="programming-framework" class="slide section level2">
+<h1>Programming Framework</h1>
 <ul>
 <li><a
 href="https://docs.opendp.org/en/stable/theory/a-framework-to-understand-dp.html">A

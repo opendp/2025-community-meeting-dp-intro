@@ -86,7 +86,7 @@ and how much noise is added.
 
 ## DP Wizard
 
-https://mccalluc-dp-wizard.share.connect.posit.cloud/
+[LIVE DEMO](https://mccalluc-dp-wizard.share.connect.posit.cloud/)
 
 ## OpenDP Library Setup
 
@@ -458,9 +458,6 @@ shape: (3, 4)
 - Explicit Keys
     - Privacy: No extra "delta" privacy parameter
     - Utility: Joins against the explicit key set, imputes missing keys
-- Invariant Keys
-    - Privacy: Weakens the integrity of the privacy guarantee
-    - Utility: Releases all keys in the clear
 
 ## DP Grouping with Stable Keys
 
@@ -500,7 +497,7 @@ Reusing the key-set released in the previous query:
 
 ```python
 >>> query_age_ilostat = (
-...     context.query(epsilon=1 / 5)
+...     context.query(epsilon=1 / 5, delta=0)
 ...     .group_by("AGE", "ILOSTAT")
 ...     .agg(pl.col.HWUSUAL.dp.sum((0, 80)))
 ...     .with_keys(df["AGE", "ILOSTAT"])
@@ -524,7 +521,7 @@ shape: (1, 4)
 Stable transformations in `with_columns`:
 ```python
 >>> query_hwusual_binned = (
-...     context.query(epsilon=1 / 5)
+...     context.query(epsilon=1 / 5, delta=0.0)
 ...     # shadows the usual work hours "HWUSUAL" column with binned data
 ...     .with_columns(pl.col.HWUSUAL.cut(breaks=[0, 20, 40, 60, 80, 98]))
 ...     .group_by(pl.col.HWUSUAL)
@@ -538,7 +535,7 @@ Stable transformations in `with_columns`:
 Stable transformations in `group_by`:
 ```python
 >>> query_hwusual_binned = (
-...     context.query(epsilon=1 / 5)
+...     context.query(epsilon=1 / 5, delta=0.0)
 ...     .group_by(pl.col.HWUSUAL.cut(breaks=[0, 20, 40, 60, 80, 98]))
 ...     .agg(dp.len())
 ... )
@@ -799,20 +796,20 @@ True
 - Proofs demonstrate that the privacy guarantees hold.
 - [Proof document](https://docs.opendp.org/en/v0.13.0/proofs/rust/src/measurements/randomized_response/make_randomized_response_bool.pdf)
 
-## Extensibility: Programming Framework
+## Programming Framework
 
 - [A Framework to Understand DP](https://docs.opendp.org/en/stable/theory/a-framework-to-understand-dp.html)
 
-| transformation | measurement    | odometer       |
-|----------------|----------------|----------------|
-| input_domain   | input_domain   | input_domain   |
-| input_metric   | input_metric   | input_metric   |
-| function       | function       | function       |
-| output_domain  |                |                |
-| output_metric  | output_measure | output_measure |
-| stability_map  | privacy_map    |                |
+* Core abstractions:
+    * Transformation
+    * Measurement
+    * Odometer
+* Supporting Elements:
+    * Domain
+    * Metric
+    * Privacy measure
 
-## Extensibility: Plugins
+## Plugins
 
 - Extend the library with your own algorithms implemented in Python or Rust
 - Python and Rust algorithms can be mixed together
@@ -823,7 +820,7 @@ True
 
 <img src="images/Hands-on-Differential-Privacy.png" alt="Book Cover" width="20%"/>
 
-## Extensibility: Supported Languages
+## Supported Languages
 
 | language | functionality                                          |
 |----------|--------------------------------------------------------|
