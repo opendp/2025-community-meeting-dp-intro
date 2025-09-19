@@ -834,5 +834,3 @@ True
 - Questions?
 - Join our [Slack](https://join.slack.com/t/opendp/shared_invite/zt-1aca9bm7k-hG7olKz6CiGm8htI2lxE8w)
 - [opendp.org](opendp.org)
-
-<img src="images/opendp-website.png" alt="OpenDP Website" width="100%"/>
